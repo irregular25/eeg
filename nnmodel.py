@@ -3,7 +3,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch
 from pylab import rcParams
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 device = (
@@ -15,32 +15,33 @@ device = (
 )
 print(f"Using {device} device")
 
-# Initialize parameters
-learning_rate = 1e-3 # How hard the network will correct its mistakes while learning
+# Initialize Hyperparameters
+#learning_rate = 1e-3 # How hard the network will correct its mistakes while learning
 eeg_sample_length = 4 # Number of eeg data points per sample
 number_of_classes = 1 #
-hidden1 = 10 # Number of neurons in the first hidden layer
-hidden2 = 50 # Number of neurons in the second hidden layer
-hidden3 = 10 # Number of neurons in the third hidden layer
-output1 = 4 # Number of neurons in the output layer
+hidden1 = 8 # (size of the) first hidden layer
+hidden2 = 10 # second hidden layer
+hidden3 = 8 # third hidden layer
+output1 = 4 # output layer
 
 class Network(nn.Module):
     def __init__(self):
         super(Network,self).__init__()
-        self.device = device
-        ## Define a learning function, needs to be reinitialized every load
-        self.optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
         self.loss_function = torch.nn.CrossEntropyLoss()
         input_size = eeg_sample_length
         hidden_size = hidden1
         hidden_size2 = hidden2
         hidden_size3 = hidden3
-        output_size = output
+        output_size = output1
         self.fc1 = nn.Linear(input_size, hidden_size)
         self.fc2 = nn.Linear(hidden_size, hidden_size2)
         self.fc3 = nn.Linear(hidden_size2, hidden_size3)
         self.fc4 = nn.Linear(hidden_size3, output_size)
         self.output = nn.Linear(output_size, number_of_classes)
+
+    def set_optim(self, opti, devi):
+        self.optimizer = opti
+        self.device = devi
     
     def forward(self, obs):
         obs = F.relu(self.fc1(obs))
@@ -68,6 +69,8 @@ class Network(nn.Module):
         for i in range(iterations):
 
             # Forward pass
+            #classification = model(train_data)
+            #output = classifier_nn(train_data)
             output = self.forward(train_data)
     
             # Loss computation
@@ -82,8 +85,8 @@ class Network(nn.Module):
             self.optimizer.step()
 
         # Plot loss graph at the end of training
-        loss_data_cpu = torch.tensor(loss_data, device = 'cpu') # to convert to numpy
+        '''loss_data_cpu = torch.tensor(loss_data, device = 'cpu') # to convert to numpy
         rcParams['figure.figsize'] = 10, 5
         plt.title("Loss vs Iterations")
         plt.plot(list(range(0, len(loss_data_cpu))), loss_data_cpu)
-        plt.show()
+        plt.show()'''
