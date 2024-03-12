@@ -5,6 +5,7 @@ import getopt
 
 from pylsl import StreamInlet, resolve_stream
 import nnmodel
+import torch
 
 import mne
 from mne.decoding import CSP, Vectorizer, FilterEstimator, Scaler, cross_val_multiscore
@@ -18,6 +19,13 @@ from sklearn.metrics import make_scorer, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+)
 
 def update_raw(sample, r):
     ''' concatenate samples as they arrive in a list'''
@@ -29,7 +37,7 @@ def update_raw(sample, r):
 
 def main(argv):
     min_train = 10
-    mod = 'svm'
+    mod = 'svm' # "nn"
     help_string = 'client.py -m <model> -t <min_train>'
     try:
         opts, args = getopt.getopt(argv, "h:m:t", longopts=["model=", "min_train"])
@@ -108,7 +116,8 @@ def main(argv):
                 print(received_events)
                 # Pick EEG channels, exclude bads
                 picks = mne.pick_types(received_info, eeg=True, meg=False, misc=False, exclude='bads')
-                epochs = mne.Epochs(received_raw, received_events, event_id=[2,3], tmin=-0.5, tmax=2.5,baseline=None,preload=True,picks=picks)
+                tmin, tmax = -0.5, 2.5 
+                epochs = mne.Epochs(received_raw, received_events, event_id=[2,3], tmin=tmin, tmax=tmax,baseline=None,preload=True,picks=picks)
                                     #,reject=dict(eeg=150e-6)) # rejection threshold too high
                 # EEG signals: n_epochs, n_eeg_channels, n_times
                 epochs_data = epochs.get_data(copy=False)  
@@ -158,14 +167,14 @@ def main(argv):
                 if mod == 'nn':
                     # NN model
                     model = nnmodel.Network().to(device)
-                    # Preprocessing standard
-                    classifier_nn = Pipeline([('filter', filt), ('vector', vectorizer),('scaler', scaler), ('nn', model)])
+                    learning_rate = 1e-3
+                    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+                    model.set_optim(opti=optimizer, devi=device)
+                    # Preprocessing
+                    #classifier_nn = Pipeline([('filter', filt), ('vector', vectorizer),('scaler', scaler), ('nn', model)])
+                    classifier_nn = Pipeline([('filter', filt), ('csp', csp), ('nn', model)])
                     scores_t2 = cross_val_multiscore(classifier_nn, X, y, cv=cv, n_jobs=None, scoring=make_scorer(f1_score, average='weighted'))
                     print(f" NN F1 Scores ({scores_t2})")
-
-        # Final figure
-        plt.fill_between(iter, hyp_limits[0], y2=hyp_limits[1], color='b', alpha=0.5)
-        plt.draw()
         
     except KeyboardInterrupt:
         print("User Interrupted")
