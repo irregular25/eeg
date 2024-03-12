@@ -7,10 +7,12 @@ import time
 from random import random as rand
 
 from pylsl import StreamInfo, StreamOutlet, local_clock
-
+import pylsl
 import numpy as np
 import mne
-import pylsl
+from mne.io import concatenate_raws, read_raw_edf
+from mne.datasets import eegbci
+from mne.channels import make_standard_montage
 
 ## Load Data set ##
 
@@ -61,7 +63,7 @@ def main():
     event_outlet = pylsl.StreamOutlet(event_info)
 
     # Retrieve EEG data
-    raw = raw_data.pick(picks=["eeg"])
+    raw = raw.pick(picks=["eeg"])
     eeg_info = pylsl.StreamInfo(name='MNE', type="EEG",
                                 channel_count=raw.info["nchan"],
                                 nominal_srate=raw.info["sfreq"],
@@ -96,7 +98,7 @@ def main():
 
             # get event marker if present
             if events[event_counter][0] == (index_first_sample + counter) :
-                print(counter)
+                #print(counter)
                 event_marker = str(events[event_counter][2])
             
                 event_outlet.push_sample([event_marker])
@@ -113,7 +115,7 @@ def main():
         print("User interrupted the stream")
 
     # release resources
-    print("data sent")
+    print("All data sent")
     del eeg_outlet
     del event_outlet
 
