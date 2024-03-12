@@ -8,12 +8,12 @@ The required python libraries are listed in requirements.txt
 For this project, the EEGBCI MNE dataset was chosen as it consists of motor imagery EEG data.
 109 subjects performed different motor/imagery tasks while 64-channel EEG were recorded using the BCI2000 system.
 Each subject performed 14 experimental runs:
-  1: Baseline (eyes open)
-  2: Baseline (eyes closed)
-  3,7,11: Motor execution: left vs right hand
-  4,8,12: Motor Imagery: left vs right hand
-  5,9,13: Motor execution: Hands vs Feet
-  6,10,14: Motor Imagery: Hands vs Feet
+  - 1: Baseline (eyes open)
+  - 2: Baseline (eyes closed)
+  - 3,7,11: Motor execution: left vs right hand
+  - 4,8,12: Motor Imagery: left vs right hand
+  - 5,9,13: Motor execution: Hands vs Feet
+  - 6,10,14: Motor Imagery: Hands vs Feet
 
 For this project, the focus was on the Motor Imagery EEG data and only the runs 6,10,14 were used. 
 In these runs, the "Hands" task involves closing both fists, while the "left vs right" task consists of closing only one.
