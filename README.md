@@ -1,6 +1,8 @@
 # Test code
 
 Here is the repository for my project.
-To run it, type : python client.py -m 'svm'
+To run it, type : 
+- python client.py -m 'svm'
+- python server.py
 
 Hugues
