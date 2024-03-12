@@ -28,13 +28,12 @@ To run this project, execute in this order:
 - python server.py
 
 Some extra arguments are available for this 2 files.
-
-For the server, you can indicate which subject to choose for the data : python server.py -s <subject>
+For the server, you can indicate which subject (1-109) to choose for the data : python server.py -s "subject number"
 
 For the client, you can indicate:
-- the model for decoding ('svm' or transformer model 'nn', default is 'svm'): python client.py -m <model> 
-- the minimum number of EEG epochs data to collect before training: python client.py -t <min_training>
+- the model for decoding ('svm' or transformer model 'nn', default is 'svm'): python client.py -m "model name"
+- the minimum number of EEG epochs data to collect before training: python client.py -t "minimum number"
 
-You can also add the argument -h for both files to see how to pass arguments
+You can also add the argument -h for both files to see how to pass arguments.
 
 Hugues
