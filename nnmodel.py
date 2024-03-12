@@ -57,7 +57,7 @@ class Network(nn.Module):
         y_pred = torch.tensor(y_pred, device = 'cpu').numpy() # convert to numpy
         return np.round(y_pred.squeeze(1))
     
-    def fit(self, X_train, y_train, iterations=50):
+    def fit(self, X_train, y_train, iterations=5):
 
         train_data = torch.FloatTensor(X_train).to(self.device)
         print(train_data.size())
