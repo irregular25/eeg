@@ -40,12 +40,26 @@ for subject in subject_list:
     raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames])
     all_data.append(raw)'''
 
-def main():
-    ''' send the raw EEG data and the associated events with pylsl to the client
-    of the subject
+def main(argv):
+    ''' For a subject, this function sends the raw EEG data and the associated events 
+    to the client with pylsl
     '''
     runs = [6, 10, 14]  # motor imagery: hands vs feet
     subject=1
+
+    help_string = 'server.py -s <subject>'
+    try:
+        opts, args = getopt.getopt(argv, "h:s", longopts=["subject="])
+    except getopt.GetoptError:
+        print(help_string)
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print(help_string)
+            sys.exit()
+        elif opt in ("-s", "--subject"):
+            subject = int(arg)
+    
     
     # Load mne dataset
     raw_fnames = eegbci.load_data(subject, runs)
@@ -121,6 +135,5 @@ def main():
     del event_outlet
 
 if __name__ == '__main__':
-    main()    
+    main(sys.argv[1:]) 
     
-
