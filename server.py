@@ -91,7 +91,8 @@ def main():
         pos_last_sample = raw.last_samp - raw.first_samp
         pos_last_event = len(events) - 1
     
-        while counter <= pos_last_sample :
+        # while counter <= pos_last_sample : ## for ending the stream
+        while True :
 
             # get sample for all channel
             eeg_sample = raw[:,counter][0].ravel()
@@ -106,8 +107,8 @@ def main():
                 event_counter = 0 if event_counter == pos_last_event else event_counter + 1
 
             eeg_outlet.push_sample(eeg_sample)
-            # go to next sample
-            counter += 1
+            # go to next sample or reset if all samples seen
+            counter = 0 if counter == pos_last_sample else counter + 1
 
             # time value can be adjusted to better synchronize streams
             time.sleep(0.01)
@@ -115,7 +116,7 @@ def main():
         print("User interrupted the stream")
 
     # release resources
-    print("Deleting unused outlets")
+    print("deleting unused outlets")
     del eeg_outlet
     del event_outlet
 
