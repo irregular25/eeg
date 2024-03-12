@@ -115,7 +115,7 @@ def main():
         print("User interrupted the stream")
 
     # release resources
-    print("All data sent")
+    print("Deleting unused outlets")
     del eeg_outlet
     del event_outlet
 
