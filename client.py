@@ -31,7 +31,7 @@ def main(argv):
     min_train = 10
     mod = 'svm'
     help_string = 'client.py -m <model> -t <min_train>'
-    '''try:
+    try:
         opts, args = getopt.getopt(argv, "h:m:t", longopts=["model=", "min_train"])
     except getopt.GetoptError:
         print(help_string)
@@ -43,7 +43,7 @@ def main(argv):
         elif opt in ("-t", "--min_train"):
             min_train = float(arg)
         elif opt in ("-m", "--model"):
-            mod = str(arg)'''
+            mod = str(arg)
 
     # Look for Streams
     print("looking for an EEG stream...")
