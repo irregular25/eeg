@@ -68,8 +68,6 @@ class Network(nn.Module):
         for i in range(iterations):
 
             # Forward pass
-            #classification = model(train_data)
-            #output = classifier_nn(train_data)
             output = self.forward(train_data)
     
             # Loss computation
