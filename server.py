@@ -32,13 +32,17 @@ for further details, see: https://www.physionet.org/content/eegmmidb/1.0.0/
 '''
 
 ## NB: For time issues, here we compute the motor imagery data of 1 subject
-# The data of all subjects can be retrieved like this (commented section).
-'''subject_list = [i for i in range(1,110)]
-all_data = []
+# However, the data of all subjects from 10 to 20 can be retrieved like this (commented section).
+
+'''subject_list = [i for i in range(11,20)]
+
+raw_fnames10 = eegbci.load_data(10, runs)
+all_raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames10])
+
 for subject in subject_list:
     raw_fnames = eegbci.load_data(subject, runs)
     raw = concatenate_raws([read_raw_edf(f, preload=True) for f in raw_fnames])
-    all_data.append(raw)'''
+    all_raw = concatenate_raws([all_raw,raw])'''
 
 def main(argv):
     ''' For a subject, this function sends the raw EEG data and the associated events 
@@ -47,7 +51,7 @@ def main(argv):
     runs = [6, 10, 14]  # motor imagery: hands vs feet
     subject=1
 
-    help_string = 'server.py -s <subject>'
+    help_string = 'server.py -s <subject> (Note: subject must be an int bewteen 1 and 109)'
     try:
         opts, args = getopt.getopt(argv, "h:s", longopts=["subject="])
     except getopt.GetoptError:
@@ -137,3 +141,4 @@ def main(argv):
 if __name__ == '__main__':
     main(sys.argv[1:]) 
     
+
