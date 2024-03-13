@@ -1,6 +1,6 @@
 # Test code
 
-Here is the repository for my project streaming EEG data from a server to a client with pylsl and then decoding it.
+Here is the repository for my project about streaming EEG data from a server to a client with pylsl and then decoding it.
 The required python libraries are listed in requirements.txt
 
 ## Dataset
