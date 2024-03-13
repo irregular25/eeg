@@ -171,10 +171,10 @@ def main(argv):
                     optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
                     model.set_optim(opti=optimizer, devi=device)
                     # Preprocessing
-                    #classifier_nn = Pipeline([('filter', filt), ('vector', vectorizer),('scaler', scaler), ('nn', model)])
+                    #classifier_nn = Pipeline([('filter', filt),('scaler', scaler), ('vector', vectorizer),('nn', model)])
                     classifier_nn = Pipeline([('filter', filt), ('csp', csp), ('nn', model)])
                     scores_t2 = cross_val_multiscore(classifier_nn, X, y, cv=cv, n_jobs=None, scoring=make_scorer(f1_score, average='weighted'))
-                    print(f" NN F1 Scores ({scores_t2})")
+                    print(f" NN F1 Score ({scores_t2})")
         
     except KeyboardInterrupt:
         print("User Interrupted")
