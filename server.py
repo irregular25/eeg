@@ -32,7 +32,7 @@ for further details, see: https://www.physionet.org/content/eegmmidb/1.0.0/
 '''
 
 ## NB: For time issues, here we compute the motor imagery data of 1 subject
-# However, the data of all subjects from 10 to 20 can be retrieved like this (commented section).
+# However, the data of all subjects (or here from 10 to 20) can be retrieved like this (commented section).
 
 '''subject_list = [i for i in range(11,20)]
 
