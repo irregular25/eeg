@@ -36,7 +36,7 @@ For the client, you can indicate:
 
 You can also add the argument -h for both files to see how to pass arguments.
 
-# Transformer model
+### Transformer model
 A Transformer model (CNN and transformer encoder architecture) can also be run in transformermodel.py
 
 Hugues
