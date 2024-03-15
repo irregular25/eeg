@@ -45,23 +45,6 @@ embed_dim = 32 # embedding dimension
 hidden1 = 128 # (size of the) first hidden layer
 hidden2= 16
 
-# Initialize model
-model = TransNet().to(device)
-
-## Define a learning function, needs to be reinitialized every load
-learning_rate = 0.0003
-optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
-#optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
-loss_function = torch.nn.CrossEntropyLoss()
-
-# Retrieve Data
-runs = [6,10,14]
-X,y = retrieve_data(3,13)
-X_val,y_val = retrieve_data(1,3)
-
-# TRAIN #
-fit(X,y,X_val,y_val)
-
 class TransNet(nn.Module):
     def __init__(self, n_channels=64, n_samples=400, embed_dim=32):
         super(TransNet,self).__init__()
@@ -226,3 +209,21 @@ def retrieve_data(subject_start,subject_end):
     X = filt.transform(X)
     y = labels
     return X,y
+
+if __name__ == '__main__':
+    # Initialize model
+    model = TransNet().to(device)
+
+    ## Define a learning function, needs to be reinitialized every load
+    learning_rate = 0.0003
+    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+    #optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    loss_function = torch.nn.CrossEntropyLoss()
+
+    # Retrieve Data
+    runs = [6,10,14]
+    X,y = retrieve_data(3,13)
+    X_val,y_val = retrieve_data(1,3)
+
+    # TRAIN #
+    fit(X,y,X_val,y_val)
