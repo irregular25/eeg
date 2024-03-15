@@ -31,9 +31,12 @@ Some extra arguments are available for this 2 files.
 For the server, you can indicate which subject (1-109) to choose for the data : python server.py -s "subject number"
 
 For the client, you can indicate:
-- the model for decoding ('svm' or transformer model 'nn', default is 'svm'): python client.py -m "model name"
+- the model for decoding ('svm' or nn model 'nn', default is 'svm'): python client.py -m "model name"
 - the minimum number of EEG epochs data to collect before training: python client.py -t "minimum number"
 
 You can also add the argument -h for both files to see how to pass arguments.
+
+# Transformer model
+A Transformer model (CNN and transformer encoder architecture) can also be run in transformermodel.py
 
 Hugues
