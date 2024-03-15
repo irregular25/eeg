@@ -7,7 +7,6 @@ import pylsl
 from mne.io import concatenate_raws, read_raw_edf
 from mne.datasets import eegbci
 from mne.channels import make_standard_montage
-from mne.decoding import CSP
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -222,8 +221,8 @@ if __name__ == '__main__':
 
     # Retrieve Data
     runs = [6,10,14]
-    X,y = retrieve_data(3,13)
-    X_val,y_val = retrieve_data(1,3)
+    X,y = retrieve_data(4,14)
+    X_val,y_val = retrieve_data(1,4)
 
     # TRAIN #
     fit(X,y,X_val,y_val)
