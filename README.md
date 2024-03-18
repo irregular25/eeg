@@ -31,13 +31,28 @@ Some extra arguments are available for this 2 files.
 For the server, you can indicate which subject (1-109) to choose for the data : python server.py -s "subject number"
 
 For the client, you can indicate:
-- the model for decoding ('svm' or nn model 'nn', default is 'svm'): python client.py -m "model name"
+- the model for decoding ('svm' or nn transformer model 'nn_transformer', default is 'svm'): python client.py -m "model name"
 - the minimum number of EEG epochs data to collect before training: python client.py -t "minimum number"
 
 You can also add the argument -h for both files to see how to pass arguments.
 
+## Models
+
+For every model, a pass-band filter is first applied on the EEG data to remove low and high frequency noise.
+
+### SVM
+
+The SVM (Support Vector Machine) model can be used for decoding the streaming EEG data online and is trained as the data arrives.
+To prepare the data and reduce their dimension, the CSP (Common Space Pattern) algorithm, a well-known algorithm for feature extraction in EEG Motor-Imagery data is first applied.
+
 ### Transformer model
-A Transformer model (CNN and transformer encoder architecture) can also be run in transformermodel.py
+
+The Transformer model (CNN and transformer encoder architecture) can be loaded and used for decoding online. 
+Even if it is trained on a larger dataset (80 subjects, cf model_nn_transformer.py), unlike the SVM model,
+the decoding is done without any data on the subject tested.
+
+For reference, a Transformer Only model (Without CNN) is also given (model_transformer_only.py) even though it doesn't seem to converge. 
+This shows the benefits of using CNN layers for dimension reduction and extracting local features (spatio-temporal) from EEG data.
 
 ### S4 Model (Update)
 To investigate the potential of SSM models on EEG data, a S4 model has also been implemented and can be run in model_s4.py.
