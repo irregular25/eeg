@@ -39,4 +39,7 @@ You can also add the argument -h for both files to see how to pass arguments.
 ### Transformer model
 A Transformer model (CNN and transformer encoder architecture) can also be run in transformermodel.py
 
+### S4 Model
+To investigate the potential of SSM models on EEG data, a S4 model has also been implemented and be run in models4.py
+
 Hugues
