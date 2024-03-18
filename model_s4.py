@@ -4,9 +4,6 @@ Note that the model is heavy to compute. The following code is greatly inspired 
 import torch
 from torch.utils.data import DataLoader, Dataset
 
-from pylab import rcParams
-from sklearn.metrics import f1_score, make_scorer
-
 from functools import partial
 import jax
 import jax.numpy as np # not for numpy !
@@ -19,7 +16,6 @@ import optax
 from tqdm import tqdm
 
 import mne
-import pylsl
 from mne.io import concatenate_raws, read_raw_edf
 from mne.datasets import eegbci
 from mne.channels import make_standard_montage
