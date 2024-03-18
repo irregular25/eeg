@@ -21,6 +21,10 @@ To avoid any bias, the 4,8,12 runs were thus not considered in this project.
 
 For further information about this dataset, see https://www.physionet.org/content/eegmmidb/1.0.0/
 
+The 64 channels of these dataset are shown on the figure below.
+
+![alt text](https://github.com/irregular25/eeg/edit/main/eegbci_channels.png
+
 ## Run
 
 To run this project, execute in this order: 
