@@ -5,6 +5,8 @@ import getopt
 
 from pylsl import StreamInlet, resolve_stream
 import nnmodel
+import model_nn_transformer
+
 import torch
 
 import mne
@@ -13,11 +15,12 @@ from mne.decoding import CSP, Vectorizer, FilterEstimator, Scaler, cross_val_mul
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.model_selection import ShuffleSplit, cross_val_score
 from sklearn.metrics import make_scorer, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
+
+PATH = "nn_transformer_model.pt" ## Warning: change to your path
 
 device = (
     "cuda"
@@ -37,7 +40,7 @@ def update_raw(sample, r):
 
 def main(argv):
     min_train = 10
-    mod = 'svm' # "nn"
+    mod = "nn_transformer" #'svm' # "nn"
     help_string = 'client.py -m <model> -t <min_train>'
     try:
         opts, args = getopt.getopt(argv, "h:m:t", longopts=["model=", "min_train"])
@@ -113,10 +116,11 @@ def main(argv):
                 received_raw = mne.io.RawArray(received_eeg, received_info, first_sample)
                 
                 ## Epochs
-                print(received_events)
+                #print(received_events)
                 # Pick EEG channels, exclude bads
                 picks = mne.pick_types(received_info, eeg=True, meg=False, misc=False, exclude='bads')
-                tmin, tmax = -0.5, 2.5 
+                #tmin, tmax = -0.5, 2.5 
+                tmin, tmax = -1, 4 
                 epochs = mne.Epochs(received_raw, received_events, event_id=[2,3], tmin=tmin, tmax=tmax,baseline=None,preload=True,picks=picks)
                                     #,reject=dict(eeg=150e-6)) # rejection threshold too high
                 # EEG signals: n_epochs, n_eeg_channels, n_times
@@ -125,14 +129,17 @@ def main(argv):
                 labels = epochs.events[:, -1] - 2 
 
                 ### Preprocessing steps ###
-                # Apply band-pass filter
+                ## Apply band-pass filter : reduce high and low frequency noise
                 filt = FilterEstimator(epochs.info, 7.0, 30, fir_design='firwin')
-                # standardize the data based on channel scales (different from scikit-learn)
-                scaler = Scaler(epochs.info)
-                # 2D format for feeding the network
-                vectorizer = Vectorizer()                
+                #filt = FilterEstimator(epochs.info, 4.0, 40, fir_design='firwin')
 
-                # CSP: Common Space Pattern
+                ## Classical pipeline (not used in the end) ##
+                # standardize the data based on channel scales (different from scikit-learn)
+                #scaler = Scaler(epochs.info)
+                # 2D format for feeding the network
+                #vectorizer = Vectorizer()                
+
+                ## CSP: Common Space Pattern
                 csp = CSP(n_components=4, reg=None, log=True, norm_trace=False)
                 
                 ## Cross-Validation
@@ -141,17 +148,21 @@ def main(argv):
                 y = labels
 
                 if mod == 'svm':
-                    # SVM model
+                    ## Online training and decoding from streaming data ##
+                    
+                    # SVM model #
                     svm = SVC(kernel='rbf', gamma=0.7, C = 1.0)
-                    # Preprocessing : band-pass filter and csp (before svm)
+                    # Preprocessing #: band-pass filter and csp (before svm)
                     classifiersvm = Pipeline([('filter', filt), ('csp', csp), ('svm', svm)])
+                    
+                    # Cross-validation to better estimate decoding performance
                     scores_t = cross_val_score(classifiersvm, X, y, scoring=make_scorer(f1_score, average='weighted'), cv=cv, n_jobs=1)
                     print(f" SVM F1 Scores ({scores_t})")
                     std_scores_svm.append(scores_t.std())
                     scores_svm.append(scores_t.mean())
                     iter.append(len(received_events))
 
-                    # Plot F1-score
+                    # Plot F1-score (with std) for Cross-validation as data arrives
                     ax = plt.subplot(111)
                     ax.set_xlabel('Epochs (events)')
                     ax.set_ylabel('Classification f1 score')
@@ -164,17 +175,36 @@ def main(argv):
                     plt.pause(0.01)
                     plt.draw()
 
-                if mod == 'nn':
-                    # NN model
+                '''if mod == 'nn': # old basic nn model
+                    ## NN model ##
                     model = nnmodel.Network().to(device)
                     learning_rate = 1e-3
                     optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
                     model.set_optim(opti=optimizer, devi=device)
                     # Preprocessing
-                    #classifier_nn = Pipeline([('filter', filt),('scaler', scaler), ('vector', vectorizer),('nn', model)])
+                    #classifier_nn = Pipeline([('filter', filt), ('vector', vectorizer),('scaler', scaler), ('nn', model)])
                     classifier_nn = Pipeline([('filter', filt), ('csp', csp), ('nn', model)])
                     scores_t2 = cross_val_multiscore(classifier_nn, X, y, cv=cv, n_jobs=None, scoring=make_scorer(f1_score, average='weighted'))
-                    print(f" NN F1 Score ({scores_t2})")
+                    print(f" NN F1 Scores ({scores_t2})")'''
+
+                
+                if mod == 'nn_transformer':
+                    ## NN Transformer model ##
+                    model = model_nn_transformer.TransformerNet().to(device)
+                
+                    ## This model needs a few iterations to converge, so we will load it here directly ##
+                    # Even if the training dataset and training time are repectively bigger and higher, unlike the SVM model,
+                    # the decoding is done without any data on the subjects tested.
+                    
+                    # Model trained on 80 subjects (8-87 arbitrarily) 
+                    # (Be careful not to choose one of the subject used for training to avoid bias)
+                    model.load_state_dict(torch.load(PATH))
+                    
+                    learning_rate = 0.0003
+                    optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
+                    model.set_optim(opti=optimizer, devi=device)
+                    # Decode data received
+                    model.evaluate(X,y)
         
     except KeyboardInterrupt:
         print("User Interrupted")
