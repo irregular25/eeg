@@ -40,7 +40,7 @@ def update_raw(sample, r):
 
 def main(argv):
     min_train = 10
-    mod = "nn_transformer" #'svm' # "nn"
+    mod = 'svm' #"nn_transformer" # "nn"
     help_string = 'client.py -m <model> -t <min_train>'
     try:
         opts, args = getopt.getopt(argv, "h:m:t", longopts=["model=", "min_train"])
