@@ -199,6 +199,9 @@ def main(argv):
                     # Model trained on 80 subjects (8-87 arbitrarily) 
                     # (Be careful not to choose one of the subject used for training to avoid bias)
                     model.load_state_dict(torch.load(PATH))
+
+                    # Apply pass-band filter #
+                    X = filt.transform(X)
                     
                     learning_rate = 0.0003
                     optimizer = torch.optim.Adam(model.parameters(), lr = learning_rate)
