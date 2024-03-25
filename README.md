@@ -1,7 +1,6 @@
-# Test code
+# Decoding streamed EEG
 
-Here is the repository for my project about streaming EEG data from a server to a client with pylsl and then decoding it.
-The required python libraries are listed in requirements.txt
+Code for streaming EEG data from a server to a client with pylsl and then decoding it.
 
 ## Dataset
 
@@ -60,5 +59,3 @@ This shows the benefits of using CNN layers for dimension reduction and extracti
 
 ### S4 Model (Update)
 To investigate the potential of SSM models on EEG data, a S4 model has also been implemented and can be run in model_s4.py.
-
-Hugues
