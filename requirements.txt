@@ -5,7 +5,7 @@ pytorch
 scikit-learn
 
 # for s4 #
-torch==1.10
+torch==1.13.1
 jax==0.3.21 # for gpu usage: --upgrade "jax[cuda11_pip]" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 flax==0.5.0
 tqdm
