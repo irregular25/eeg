@@ -20,7 +20,7 @@ from sklearn.metrics import make_scorer, f1_score
 from sklearn.pipeline import Pipeline
 from sklearn.svm import SVC
 
-PATH = "nn_transformer_model2.pt" ## Warning: change to your path
+PATH = "files/nn_transformer_model2.pt" ## Warning: change to your path
 
 device = (
     "cuda"
