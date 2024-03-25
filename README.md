@@ -22,7 +22,7 @@ For further information about this dataset, see https://www.physionet.org/conten
 
 The 64 channels of this dataset are shown on the figure below.
 
-<img src="https://github.com/irregular25/eeg/edit/main/eegbci_channels.png" alt="Alt text" title="EEG Channels">
+<img src="https://github.com/irregular25/eeg/edit/main/files/eegbci_channels.png" alt="Alt text" title="EEG Channels">
 
 ## Run
 
