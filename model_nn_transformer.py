@@ -41,7 +41,7 @@ number_of_classes = 2
 embed_dim = 40 #32 # embedding dimension
 hidden1 = 256 # (size of the) first hidden layer
 hidden2= 32
-PATH = "nn_transformer_model2.pt" ## WARNING : Change to your file path ##
+PATH = "files/nn_transformer_model2.pt" ## WARNING : Change to your file path ##
 num_encoder_layers=1
 
 class TransformerNet(nn.Module):
