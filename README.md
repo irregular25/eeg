@@ -1,4 +1,4 @@
-# Decoding streamed EEG
+# Decoding streamed EEG data (Motor Imagery)
 
 Code for streaming EEG data from a server to a client with pylsl and then decoding it.
 
